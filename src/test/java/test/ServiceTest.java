@@ -36,11 +36,42 @@ public class ServiceTest extends BaseTest{
 
     @Test
     public void canUpdateNameOfAService(){
+        ServiceRequestBody serviceRequestBody= new ServiceRequestBuilder()
+                .withName("service1").build();
+
+        Service service= new Service();
+        Response response=service.createService(serviceRequestBody);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SC_CREATED);
+        ServiceResponse serviceResponse=response.as(ServiceResponse.class);
+
+        ServiceRequestBody updateRequestBody= new ServiceRequestBuilder()
+                .withName("service2").build();
+
+        Response updateResponse=service.updateService(updateRequestBody,serviceResponse.getId());
+        assertThat(updateResponse.getStatusCode()).isEqualTo(HttpStatus.SC_OK);
+        //ServiceResponse updateServiceRespone=updateRespone.as(ServiceResponse.class);
+
+        Response findResponse=service.findService(serviceResponse.getId());
+        assertThat(findResponse.getStatusCode()).isEqualTo(HttpStatus.SC_OK);
+        ServiceResponse findServiceResponse=findResponse.as(ServiceResponse.class);
+        assertThat(findServiceResponse.getName()).isEqualTo("service2");
 
     }
 
     @Test
     public void canRemoveAService(){
+        ServiceRequestBody serviceRequestBody= new ServiceRequestBuilder()
+                .withName("service1").build();
 
+        Service service= new Service();
+        Response response=service.createService(serviceRequestBody);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SC_CREATED);
+        ServiceResponse serviceResponse=response.as(ServiceResponse.class);
+
+        Response removeRespone=service.removeService(serviceResponse.getId());
+        assertThat(removeRespone.getStatusCode()).isEqualTo(HttpStatus.SC_OK);
+
+        Response findresponse=service.findService(serviceResponse.getId());
+        assertThat(findresponse.getStatusCode()).isEqualTo(HttpStatus.SC_NOT_FOUND);
     }
 }

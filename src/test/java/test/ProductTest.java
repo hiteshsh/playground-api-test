@@ -1,8 +1,6 @@
 package test;
 
 import apis.product.*;
-import apis.store.AllStoreResponse;
-import apis.store.Store;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
 import org.junit.Test;
@@ -10,7 +8,6 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -84,11 +81,52 @@ public class ProductTest extends BaseTest{
 
     @Test
     public void shouldBeAbleToUpdateProductAndSeeUpdatedDetails(){
+        ProductRequestBody productRequestBody= new ProductRequestBuilder()
+                .withName("prod1").withDescription("test prod").withPrice(100).withModel("XAEWRT")
+                .withType("type1").withUpc("1253761891").withManufacturer("apple")
+                .withImage("image1").build();
+
+        Product product= new Product();
+        Response response=product.createProduct(productRequestBody);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SC_CREATED);
+        ProductResponse createProdResponse= response.as(ProductResponse.class);
+
+        ProductRequestBody updateProductRequestBody= new ProductRequestBuilder()
+                .withName("prod new").withDescription("test prod new").withPrice(200).build();
+        Response updateResponse=product.updateProduct(updateProductRequestBody,createProdResponse.getId());
+        assertThat(updateResponse.getStatusCode()).isEqualTo(HttpStatus.SC_OK);
+
+        ProductRequestBody expectedProductRequestBody= new ProductRequestBuilder()
+                .withName("prod new").withDescription("test prod new").withPrice(200).withModel("XAEWRT")
+                .withType("type1").withUpc("1253761891").withManufacturer("apple")
+                .withImage("image1").build();
+
+        Response response1=product.findProduct(createProdResponse.getId());
+        assertThat(response1.getStatusCode()).isEqualTo(HttpStatus.SC_OK);
+        ProductResponse findResponse= response1.as(ProductResponse.class);
+        assertThat(findResponse.getId()).isEqualTo(createProdResponse.getId());
+        product.verifyProductDetails(findResponse,expectedProductRequestBody);
+
 
     }
 
     @Test
     public void shouldBeAbleToRemoveProductAndItIsNotAvailable(){
 
+        ProductRequestBody productRequestBody= new ProductRequestBuilder()
+                .withName("prod1").withDescription("test prod").withPrice(100).withModel("XAEWRT")
+                .withType("type1").withUpc("1253761891").withManufacturer("apple")
+                .withImage("image1").build();
+
+        Product product= new Product();
+        Response response=product.createProduct(productRequestBody);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SC_CREATED);
+        ProductResponse createProdResponse= response.as(ProductResponse.class);
+
+        Response removeResponse=product.removeProduct(createProdResponse.getId());
+        assertThat(removeResponse.getStatusCode()).isEqualTo(HttpStatus.SC_OK);
+
+        Response findResponse=product.findProduct(createProdResponse.getId());
+        assertThat(findResponse.getStatusCode()).isEqualTo(HttpStatus.SC_NOT_FOUND);
     }
 }
