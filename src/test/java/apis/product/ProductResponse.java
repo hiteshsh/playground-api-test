@@ -1,6 +1,5 @@
 package apis.product;
 
-import apis.category.CategoryRequestBody;
 import apis.category.CategoryResponse;
 import lombok.Getter;
 import lombok.Setter;

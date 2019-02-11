@@ -6,8 +6,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import util.PlayGroundProperties;
 
-import java.util.Map;
-
 import static io.restassured.RestAssured.given;
 
 public class Service {

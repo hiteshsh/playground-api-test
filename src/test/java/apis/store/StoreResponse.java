@@ -1,6 +1,5 @@
 package apis.store;
 
-import apis.service.ServiceResponse;
 import lombok.Getter;
 import lombok.Setter;
 

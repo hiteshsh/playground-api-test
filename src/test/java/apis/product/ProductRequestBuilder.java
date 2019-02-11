@@ -1,7 +1,5 @@
 package apis.product;
 
-import java.util.Optional;
-
 public class ProductRequestBuilder {
 
     private ProductRequestBody productRequestBody;

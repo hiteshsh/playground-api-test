@@ -1,7 +1,6 @@
 package apis.product;
 
 
-import apis.store.StoreResponse;
 import lombok.Getter;
 import lombok.Setter;
 

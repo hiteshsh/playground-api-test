@@ -2,11 +2,9 @@ package apis.category;
 
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import org.apache.logging.log4j.*;
-import util.PlayGroundProperties;
-
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+import util.PlayGroundProperties;
 
 import static io.restassured.RestAssured.given;
 
